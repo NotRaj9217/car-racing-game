@@ -89,14 +89,15 @@ function createObstacle() {
     obsY += speed;
     obs.style.top = obsY + "px";
 
-    // Collision detection
+    // Collision detection with buffer to make it less sensitive
     const carRect = car.getBoundingClientRect();
     const obsRect = obs.getBoundingClientRect();
+    const buffer = 10; // pixels
     if (
-      carRect.left < obsRect.right &&
-      carRect.right > obsRect.left &&
-      carRect.top < obsRect.bottom &&
-      carRect.bottom > obsRect.top
+      carRect.left + buffer < obsRect.right - buffer &&
+      carRect.right - buffer > obsRect.left + buffer &&
+      carRect.top + buffer < obsRect.bottom - buffer &&
+      carRect.bottom - buffer > obsRect.top + buffer
     ) {
       endGame();
     }
@@ -129,6 +130,8 @@ function endGame() {
   isGameOver = true;
   clearInterval(speedInterval);
   clearInterval(spawnInterval);
+  speedInterval = undefined;
+  spawnInterval = undefined;
   crashSound.play();
   engineSound.pause();
   finalScore.innerText = "Your Score: " + score;
