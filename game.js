@@ -21,40 +21,28 @@ const engineSound = new Audio("engine.mp3");
 engineSound.loop = true;
 engineSound.volume = 0.2;
 
-// Touch controls for left/right halves
+// Touch controls for left/right halves - discrete movement per tap
 game.addEventListener("touchstart", e => {
   if (isGameOver || !isGameStarted) return;
-  updateTouchDirection(e);
-});
-game.addEventListener("touchmove", e => {
-  if (isGameOver || !isGameStarted) return;
-  updateTouchDirection(e);
-});
-game.addEventListener("touchend", e => {
-  carVelocity = 0;
-});
-
-function updateTouchDirection(e) {
   const touchX = e.touches[0].clientX - game.getBoundingClientRect().left;
   if (touchX < 200) {
-    carVelocity = -acceleration;
+    carX = Math.max(40, carX - 25);
   } else {
-    carVelocity = acceleration;
+    carX = Math.min(250, carX + 25);
   }
-}
+  car.style.left = carX + "px";
+});
 
-// Mouse controls for left/right halves
+// Mouse controls for left/right halves - discrete movement per click
 game.addEventListener("mousedown", e => {
   if (isGameOver || !isGameStarted) return;
   const clickX = e.clientX - game.getBoundingClientRect().left;
   if (clickX < 200) {
-    carVelocity = -acceleration;
+    carX = Math.max(40, carX - 25);
   } else {
-    carVelocity = acceleration;
+    carX = Math.min(250, carX + 25);
   }
-});
-game.addEventListener("mouseup", e => {
-  carVelocity = 0;
+  car.style.left = carX + "px";
 });
 
 // Keyboard control (PC) - hold to move
