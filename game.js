@@ -156,6 +156,22 @@ function endGame() {
     highScore = score;
     localStorage.setItem('highScore', highScore);
   }
+
+  // Set quote based on score
+  let quote = "";
+  if (score <= 1) {
+    quote = "You are Gay";
+  } else if (score <= 5) {
+    quote = "You are a Bot";
+  } else if (score <= 10) {
+    quote = "You are a Noob";
+  } else if (score <= 20) {
+    quote = "You are cooking";
+  } else {
+    quote = "You are a Pro Sigma";
+  }
+  document.getElementById('quote').innerText = quote;
+
   gameOverScreen.style.display = "flex";
 }
 

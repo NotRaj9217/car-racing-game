@@ -120,6 +120,11 @@ body {
   background: #45a049;
 }
 
+#quote {
+  font-size: 18px;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 450px) {
   #startScreen h1 {
