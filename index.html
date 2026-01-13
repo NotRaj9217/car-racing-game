@@ -13,7 +13,10 @@
 
   <div id="startScreen">
     <h1>Car Rush</h1>
+    <p>Tap left half to move left, right half to move right.<br>Use arrow keys on PC.</p>
+    <p>High Score: <span id="highScore">0</span></p>
     <button onclick="startGame()">Start Game</button>
+    <small>Made by- RAJ</small>
   </div>
 
   <div id="game" style="display: none;">
@@ -24,7 +27,7 @@
   <div id="gameOver" style="display: none;">
     <h1>Game Over</h1>
     <p id="finalScore"></p>
-    <button onclick="restartGame()">Restart</button>
+    <button onclick="location.reload()">Restart</button>
   </div>
 
   <script src="game.js"></script>

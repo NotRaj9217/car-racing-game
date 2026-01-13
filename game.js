@@ -6,6 +6,7 @@ const finalScore = document.getElementById("finalScore");
 
 let carX = 165;
 let speed = 4;
+let backgroundY = 0;
 let isGameOver = false;
 let isGameStarted = false;
 let score = 0;
@@ -14,6 +15,8 @@ let acceleration = 10;
 let friction = 0.9;
 let speedInterval;
 let spawnInterval;
+let highScore = localStorage.getItem('highScore') || 0;
+document.getElementById('highScore').innerText = highScore;
 
 // Sounds
 const crashSound = new Audio("crash.mp3");
@@ -29,7 +32,7 @@ game.addEventListener("touchstart", e => {
   if (touchX < game.clientWidth / 2) {
     carX = Math.max(40, carX - 25);
   } else {
-    carX = Math.min(250, carX + 25);
+    carX = Math.min(290, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -42,7 +45,7 @@ game.addEventListener("mousedown", e => {
   if (clickX < game.clientWidth / 2) {
     carX = Math.max(40, carX - 25);
   } else {
-    carX = Math.min(250, carX + 25);
+    carX = Math.min(290, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -62,9 +65,11 @@ document.addEventListener("keyup", e => {
 function moveCar() {
   if(isGameOver) return;
   carX += carVelocity;
-  carX = Math.max(40, Math.min(250, carX)); // Keep car on road
+  carX = Math.max(40, Math.min(290, carX)); // Keep car on road
   car.style.left = carX + "px";
   carVelocity *= friction;
+  backgroundY += speed; // Scroll background down
+  game.style.backgroundPosition = '0px ' + backgroundY + 'px';
   requestAnimationFrame(moveCar);
 }
 moveCar();
@@ -78,16 +83,28 @@ function createObstacle() {
   const obs = document.createElement("img");
   obs.src = obstacleImages[Math.floor(Math.random()*obstacleImages.length)];
   obs.classList.add("obstacle");
-  obs.style.left = Math.random() * 240 + 40 + "px"; // Keep within road, assuming road is 320px wide, centered
+  obs.style.left = Math.random() * 200 + 40 + "px"; // Keep within road
   game.appendChild(obs);
 
   let obsY = -60;
+  let isMoving = false;
+  let obsX, hDirection;
+  if (obs.src.includes('obstacle2.png') && Math.random() < 0.1) {
+    isMoving = true;
+    obsX = parseInt(obs.style.left);
+    hDirection = Math.random() > 0.5 ? 1 : -1;
+  }
 
   function moveObstacle() {
     if(isGameOver) return;
 
     obsY += speed;
     obs.style.top = obsY + "px";
+    if (isMoving) {
+      obsX += hDirection * 2;
+      if (obsX < 40 || obsX > 240) hDirection *= -1;
+      obs.style.left = obsX + 'px';
+    }
 
     // Collision detection with buffer to make it less sensitive
     const carRect = car.getBoundingClientRect();
@@ -135,6 +152,10 @@ function endGame() {
   crashSound.play();
   engineSound.pause();
   finalScore.innerText = "Your Score: " + score;
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('highScore', highScore);
+  }
   gameOverScreen.style.display = "flex";
 }
 
@@ -156,6 +177,7 @@ function restartGame() {
   // Reset variables
   carX = 165;
   speed = 4;
+  backgroundY = 0;
   isGameOver = false;
   isGameStarted = true;
   score = 0;
