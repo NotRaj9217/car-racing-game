@@ -1,0 +1,141 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  touch-action: none;
+  user-select: none;
+}
+
+body {
+  background: #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+#startScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  z-index: 1000;
+}
+#startScreen h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+#startScreen button {
+  padding: 15px 30px;
+  font-size: 24px;
+  cursor: pointer;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+#startScreen button:hover {
+  background: #45a049;
+}
+
+#game {
+  position: relative;
+  width: 400px;
+  height: 700px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: url('bg.png') repeat-y;
+  background-size: cover;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.7);
+  margin: auto;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 20px;
+  z-index: 1000;
+}
+
+#car {
+  position: absolute;
+  width: 70px;
+  bottom: 20px;
+  left: 155px;
+  transition: left 0.1s ease;
+}
+
+.obstacle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: -90px;
+  border-radius: 8px;
+}
+
+#gameOver {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 700px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+}
+#gameOver button {
+  padding: 12px 24px;
+  font-size: 18px;
+  cursor: pointer;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+#gameOver button:hover {
+  background: #45a049;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 450px) {
+  #game {
+    width: 350px;
+    height: 600px;
+  }
+  #gameOver {
+    width: 350px;
+    height: 600px;
+  }
+}
+
+@media (max-width: 370px) {
+  #game {
+    width: 300px;
+    height: 500px;
+  }
+  #gameOver {
+    width: 300px;
+    height: 500px;
+  }
+  #car {
+    width: 50px;
+  }
+  .obstacle {
+    width: 60px;
+    height: 60px;
+  }
+}

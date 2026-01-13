@@ -1,0 +1,21 @@
+{
+  "name": "Car Rush",
+  "short_name": "Car Rush",
+  "description": "Exciting car racing game",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "car.png",
+      "sizes": "70x70",
+      "type": "image/png"
+    },
+    {
+      "src": "bg.png",
+      "sizes": "400x700",
+      "type": "image/png"
+    }
+  ]
+}
