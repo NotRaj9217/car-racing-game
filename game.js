@@ -24,8 +24,9 @@ engineSound.volume = 0.2;
 // Touch controls for left/right halves - discrete movement per tap
 game.addEventListener("touchstart", e => {
   if (isGameOver || !isGameStarted) return;
+  e.preventDefault();
   const touchX = e.touches[0].clientX - game.getBoundingClientRect().left;
-  if (touchX < 200) {
+  if (touchX < game.clientWidth / 2) {
     carX = Math.max(40, carX - 25);
   } else {
     carX = Math.min(250, carX + 25);
@@ -36,8 +37,9 @@ game.addEventListener("touchstart", e => {
 // Mouse controls for left/right halves - discrete movement per click
 game.addEventListener("mousedown", e => {
   if (isGameOver || !isGameStarted) return;
+  e.preventDefault();
   const clickX = e.clientX - game.getBoundingClientRect().left;
-  if (clickX < 200) {
+  if (clickX < game.clientWidth / 2) {
     carX = Math.max(40, carX - 25);
   } else {
     carX = Math.min(250, carX + 25);
