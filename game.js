@@ -24,16 +24,24 @@ engineSound.volume = 0.2;
 // Touch controls for left/right halves
 game.addEventListener("touchstart", e => {
   if (isGameOver || !isGameStarted) return;
+  updateTouchDirection(e);
+});
+game.addEventListener("touchmove", e => {
+  if (isGameOver || !isGameStarted) return;
+  updateTouchDirection(e);
+});
+game.addEventListener("touchend", e => {
+  carVelocity = 0;
+});
+
+function updateTouchDirection(e) {
   const touchX = e.touches[0].clientX - game.getBoundingClientRect().left;
   if (touchX < 200) {
     carVelocity = -acceleration;
   } else {
     carVelocity = acceleration;
   }
-});
-game.addEventListener("touchend", e => {
-  carVelocity = 0;
-});
+}
 
 // Mouse controls for left/right halves
 game.addEventListener("mousedown", e => {
