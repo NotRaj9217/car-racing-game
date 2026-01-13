@@ -170,6 +170,9 @@ function restartGame() {
   if (!speedInterval) speedInterval = setInterval(increaseSpeed, 3000);
   if (!spawnInterval) spawnInterval = setInterval(spawnObstacle, 1200);
 
+  // Spawn first obstacle immediately
+  spawnObstacle();
+
   // Restart engine sound
   engineSound.play().catch(()=>{});
 }
