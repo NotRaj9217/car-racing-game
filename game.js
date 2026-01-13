@@ -92,7 +92,7 @@ function createObstacle() {
     // Collision detection with buffer to make it less sensitive
     const carRect = car.getBoundingClientRect();
     const obsRect = obs.getBoundingClientRect();
-    const buffer = 10; // pixels
+    const buffer = 20; // pixels
     if (
       carRect.left + buffer < obsRect.right - buffer &&
       carRect.right - buffer > obsRect.left + buffer &&
