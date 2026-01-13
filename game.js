@@ -10,7 +10,7 @@ let isGameOver = false;
 let isGameStarted = false;
 let score = 0;
 let carVelocity = 0;
-let acceleration = 3;
+let acceleration = 10;
 let friction = 0.9;
 let speedInterval;
 let spawnInterval;
@@ -32,6 +32,20 @@ game.addEventListener("touchstart", e => {
   }
 });
 game.addEventListener("touchend", e => {
+  carVelocity = 0;
+});
+
+// Mouse controls for left/right halves
+game.addEventListener("mousedown", e => {
+  if (isGameOver || !isGameStarted) return;
+  const clickX = e.clientX - game.getBoundingClientRect().left;
+  if (clickX < 200) {
+    carVelocity = -acceleration;
+  } else {
+    carVelocity = acceleration;
+  }
+});
+game.addEventListener("mouseup", e => {
   carVelocity = 0;
 });
 
@@ -115,6 +129,8 @@ function spawnObstacle() {
 function endGame() {
   if(isGameOver) return;
   isGameOver = true;
+  clearInterval(speedInterval);
+  clearInterval(spawnInterval);
   crashSound.play();
   engineSound.pause();
   finalScore.innerText = "Your Score: " + score;
