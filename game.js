@@ -157,6 +157,8 @@ function endGame() {
   spawnInterval = undefined;
   crashSound.play();
   engineSound.pause();
+  // Exit fullscreen/mobile playing state
+  document.body.classList.remove('playing');
 
   // Play score-based sound after crash
   crashSound.onended = () => {
@@ -202,6 +204,8 @@ function endGame() {
 function startGame() {
   document.getElementById("startScreen").style.display = "none";
   game.style.display = "block";
+  // Enable playing/fullscreen mobile mode
+  document.body.classList.add('playing');
   isGameStarted = true;
   isGameOver = false;
   // Start engine sound
@@ -219,6 +223,8 @@ function restartGame() {
   backgroundY = 0;
   isGameOver = false;
   isGameStarted = true;
+  // Keep mobile fullscreen/playing state
+  document.body.classList.add('playing');
   score = 0;
   carVelocity = 0;
   scoreDisplay.innerText = "Score: 0";
