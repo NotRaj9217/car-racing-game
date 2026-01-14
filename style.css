@@ -23,6 +23,7 @@ body {
   text-align: center;
   color: white;
   z-index: 1000;
+  width: 400px;
 }
 #startScreen h1 {
   font-size: 48px;
@@ -52,6 +53,27 @@ body {
   background: #45a049;
 }
 
+.header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.menu-dots, .settings {
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+.info-box {
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
 #game {
   position: relative;
   width: 400px;
@@ -59,7 +81,7 @@ body {
   overflow: hidden;
   border-radius: 20px;
   background: url('bg.png') repeat-y;
-  background-size: cover;
+  background-size: 400px auto;
   box-shadow: 0 0 30px rgba(0, 255, 0, 0.7);
   margin: auto;
 }
@@ -127,6 +149,9 @@ body {
 
 /* Responsive design for mobile */
 @media (max-width: 450px) {
+  #startScreen {
+    width: 350px;
+  }
   #startScreen h1 {
     font-size: 36px;
   }
@@ -144,6 +169,9 @@ body {
 }
 
 @media (max-width: 370px) {
+  #startScreen {
+    width: 300px;
+  }
   #startScreen h1 {
     font-size: 32px;
   }
