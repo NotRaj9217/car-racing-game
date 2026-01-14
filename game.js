@@ -24,15 +24,21 @@ const engineSound = new Audio("engine.mp3");
 engineSound.loop = true;
 engineSound.volume = 0.2;
 
+// Score-based sounds
+const soundLow = new Audio("Sound 0-5.mp3");
+const soundMid = new Audio("Sound 6-10.mp3");
+const soundHigh = new Audio("Sound 11-20.mp3");
+const soundLegend = new Audio("Sound 30-1000.mp3");
+
 // Touch controls for left/right halves - discrete movement per tap
 game.addEventListener("touchstart", e => {
   if (isGameOver || !isGameStarted) return;
   e.preventDefault();
   const touchX = e.touches[0].clientX - game.getBoundingClientRect().left;
   if (touchX < game.clientWidth / 2) {
-    carX = Math.max(40, carX - 25);
+    carX = Math.max(0, carX - 25);
   } else {
-    carX = Math.min(290, carX + 25);
+    carX = Math.min(330, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -43,9 +49,9 @@ game.addEventListener("mousedown", e => {
   e.preventDefault();
   const clickX = e.clientX - game.getBoundingClientRect().left;
   if (clickX < game.clientWidth / 2) {
-    carX = Math.max(40, carX - 25);
+    carX = Math.max(0, carX - 25);
   } else {
-    carX = Math.min(290, carX + 25);
+    carX = Math.min(330, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -65,7 +71,7 @@ document.addEventListener("keyup", e => {
 function moveCar() {
   if(isGameOver) return;
   carX += carVelocity;
-  carX = Math.max(40, Math.min(290, carX)); // Keep car on road
+  carX = Math.max(0, Math.min(330, carX)); // Keep car on road
   car.style.left = carX + "px";
   carVelocity *= friction;
   backgroundY += speed; // Scroll background down
@@ -151,6 +157,19 @@ function endGame() {
   spawnInterval = undefined;
   crashSound.play();
   engineSound.pause();
+
+  // Play score-based sound after crash
+  crashSound.onended = () => {
+    if (score <= 5) {
+      soundLow.play();
+    } else if (score <= 10) {
+      soundMid.play();
+    } else if (score <= 20) {
+      soundHigh.play();
+    } else if (score >= 30) {
+      soundLegend.play();
+    }
+  };
   finalScore.innerText = "Your Score: " + score;
   if (score > highScore) {
     highScore = score;
@@ -159,16 +178,20 @@ function endGame() {
 
   // Set quote based on score
   let quote = "";
-  if (score <= 1) {
+  if (score == 0) {
     quote = "You are Gay";
   } else if (score <= 5) {
     quote = "You are a Bot";
   } else if (score <= 10) {
     quote = "You are a Noob";
-  } else if (score <= 20) {
+  } else if (score <= 19) {
     quote = "You are cooking";
-  } else {
+  } else if (score <= 30) {
     quote = "You are a Pro Sigma";
+  } else if (score <= 100) {
+    quote = "You are a Legend";
+  } else {
+    quote = "You are God";
   }
   document.getElementById('quote').innerText = quote;
 
@@ -182,7 +205,7 @@ function startGame() {
   isGameStarted = true;
   isGameOver = false;
   // Start engine sound
-  engineSound.play().catch(()=>{});
+  engineSound.play().catch(()=> {});
   // Start intervals
   speedInterval = setInterval(increaseSpeed, 3000);
   spawnInterval = setInterval(spawnObstacle, 1200);
@@ -200,6 +223,7 @@ function restartGame() {
   carVelocity = 0;
   scoreDisplay.innerText = "Score: 0";
   gameOverScreen.style.display = "none";
+  game.style.backgroundPosition = '0px 0px';
 
   // Remove remaining obstacles
   document.querySelectorAll(".obstacle").forEach(o=>o.remove());
@@ -207,6 +231,9 @@ function restartGame() {
   // Restart intervals if not running
   if (!speedInterval) speedInterval = setInterval(increaseSpeed, 3000);
   if (!spawnInterval) spawnInterval = setInterval(spawnObstacle, 1200);
+
+  // Restart animation loop
+  moveCar();
 
   // Spawn first obstacle immediately
   spawnObstacle();
