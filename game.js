@@ -4,6 +4,9 @@ const scoreDisplay = document.getElementById("score");
 const gameOverScreen = document.getElementById("gameOver");
 const finalScore = document.getElementById("finalScore");
 
+// Road tile elements for seamless looping background
+let road1, road2;
+
 let carX = 165;
 let speed = 4;
 let backgroundY = 0;
@@ -38,7 +41,7 @@ game.addEventListener("touchstart", e => {
   if (touchX < game.clientWidth / 2) {
     carX = Math.max(0, carX - 25);
   } else {
-    carX = Math.min(330, carX + 25);
+    carX = Math.min(350, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -51,7 +54,7 @@ game.addEventListener("mousedown", e => {
   if (clickX < game.clientWidth / 2) {
     carX = Math.max(0, carX - 25);
   } else {
-    carX = Math.min(330, carX + 25);
+    carX = Math.min(350, carX + 25);
   }
   car.style.left = carX + "px";
 });
@@ -71,13 +74,32 @@ document.addEventListener("keyup", e => {
 function moveCar() {
   if(isGameOver) return;
   carX += carVelocity;
-  carX = Math.max(0, Math.min(330, carX)); // Keep car on road
+  carX = Math.max(0, Math.min(350, carX)); // Keep car on road
   car.style.left = carX + "px";
   carVelocity *= friction;
   backgroundY += speed; // Scroll background down
-  game.style.backgroundPosition = '0px ' + backgroundY + 'px';
+  // Loop two road tiles so the background never shows seams
+  if (road1 && road2) {
+    const tileH = game.clientHeight || window.innerHeight;
+    const offset = backgroundY % tileH;
+    road1.style.transform = `translateY(${offset - tileH}px)`;
+    road2.style.transform = `translateY(${offset}px)`;
+  }
   requestAnimationFrame(moveCar);
 }
+// create road tiles behind other game elements
+function initRoadTiles(){
+  if (road1 || road2) return;
+  road1 = document.createElement('div');
+  road2 = document.createElement('div');
+  road1.className = 'road-tile';
+  road2.className = 'road-tile';
+  // insert as first children so they sit under score/car (z-index controlled in CSS)
+  game.insertBefore(road1, game.firstChild);
+  game.insertBefore(road2, game.firstChild);
+}
+
+initRoadTiles();
 moveCar();
 
 // Obstacles images
@@ -229,7 +251,13 @@ function restartGame() {
   carVelocity = 0;
   scoreDisplay.innerText = "Score: 0";
   gameOverScreen.style.display = "none";
-  game.style.backgroundPosition = '0px 0px';
+  // Reset road tile positions
+  backgroundY = 0;
+  if (road1 && road2) {
+    const tileH = game.clientHeight || window.innerHeight;
+    road1.style.transform = `translateY(${ -tileH }px)`;
+    road2.style.transform = `translateY(0px)`;
+  }
 
   // Remove remaining obstacles
   document.querySelectorAll(".obstacle").forEach(o=>o.remove());
