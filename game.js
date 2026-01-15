@@ -55,15 +55,15 @@ const CAR_DB = [
   { id: 'car_default', name: 'Racer X', img: 'car.png', price: 0, levelReq: 1, speedMult: 1.0, sound: 'engine.mp3' },
   { id: 'car_sport', name: 'Red Fury', img: 'Red fury.png', price: 30, levelReq: 2, speedMult: 1.15, sound: 'Red fury engine sound.mp3' },
   { id: 'car_future', name: 'Cyber Z', img: 'Cyber Z.png', price: 70, levelReq: 5, speedMult: 1.3, sound: 'Cyber Z engine sound.mp3' },
-  { id: 'car_gold', name: 'Gold Rush', img: 'Gold Rush.png', price: 100, levelReq: 10, speedMult: 1.5, sound: 'Gold Rush engine sound.mp3' }
+  { id: 'car_gold', name: 'Nissan GTR', img: 'Nissan GTR.png', price: 100, levelReq: 10, speedMult: 1.5, sound: 'Nissan GTR engine sound.mp3' }
 ];
 
-// Difficulty Config
+// Difficulty Config - Only affects obstacle density (spawn rate)
 const DIFFICULTY_SETTINGS = {
-  easy: { speed: 5, spawn: 1400, variance: 0 },
-  medium: { speed: 7, spawn: 1100, variance: 1 },
-  hard: { speed: 9, spawn: 900, variance: 2 },
-  legendary: { speed: 12, spawn: 700, variance: 3 }
+  easy: { speed: 7, spawn: 1600 },
+  medium: { speed: 7, spawn: 1200 },
+  hard: { speed: 7, spawn: 900 },
+  legendary: { speed: 7, spawn: 600 }
 };
 
 // Sounds
@@ -275,11 +275,9 @@ function createObstacle() {
   obs.style.left = spawnX + "px";
   game.appendChild(obs);
 
-  let type = 'static';
-  if (difficulty === 'medium' && Math.random() > 0.7) type = 'drifter';
-  if ((difficulty === 'hard' || difficulty === 'legendary') && Math.random() > 0.5) {
-    type = Math.random() > 0.5 ? 'weaver' : 'drifter';
-  }
+  // Probability of obstacle sliding based on difficulty
+  const driftChance = { easy: 0.1, medium: 0.2, hard: 0.3, legendary: 0.4 };
+  let type = Math.random() < driftChance[difficulty] ? 'drifter' : 'static';
 
   let obsY = -100;
   let driftDir = Math.random() > 0.5 ? 1 : -1;
@@ -421,6 +419,23 @@ function updateCoins(amount) {
 
 function addScore() {
   score++; // Simple count of obstacles overtaken
+
+  // Milestone messages every 10 points
+  if (score <= 100 && score % 10 === 0) {
+    const milestoneMessages = {
+      10: "GREAT!",
+      20: "COOKING!",
+      30: "ON FIRE!",
+      40: "UNSTOPPABLE!",
+      50: "PRO!",
+      60: "LEGEND!",
+      70: "GODLIKE!",
+      80: "INSANE!",
+      90: "BEAST MODE!",
+      100: "IMPOSSIBLE!"
+    };
+    showToast(milestoneMessages[score]);
+  }
 
   // Update combos for visual only or XP multiplier? 
   // User asked to remove multiplier display, but maybe kept XP bonus?
@@ -655,7 +670,8 @@ function initRoadTiles() {
 function openGarage() {
   const grid = document.getElementById('carGrid');
   grid.innerHTML = '';
-  document.getElementById('garageModal').style.display = 'flex';
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('garageScreen').style.display = 'flex';
 
   CAR_DB.forEach(c => {
     const owned = ownedCars.includes(c.id);
@@ -685,7 +701,8 @@ function openGarage() {
 }
 
 function closeGarage() {
-  document.getElementById('garageModal').style.display = 'none';
+  document.getElementById('garageScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
 }
 
 function buyCar(id, price) {

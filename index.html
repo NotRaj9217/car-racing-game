@@ -79,9 +79,11 @@
   </div>
 
   <!-- Garage Modal -->
-  <div id="garageModal" class="modal" style="display:none;">
-    <div class="modal-content garage-content">
+  <!-- Garage Screen (New Page) -->
+  <div id="garageScreen" style="display:none;">
+    <div class="garage-content">
       <div class="garage-header">
+        <button onclick="closeGarage()" class="back-btn">←</button>
         <h2>Garage</h2>
         <div class="coin-display-modal">
           <img src="coin.png" class="coin-icon-small"> <span id="garageCoins">0</span>
@@ -90,7 +92,6 @@
       <div id="carGrid" class="car-grid">
         <!-- Cars injected by JS -->
       </div>
-      <button onclick="closeGarage()" class="secondary-btn">Back</button>
     </div>
   </div>
 
@@ -118,7 +119,7 @@
       <button id="pauseBtn" onclick="togglePause()">⏸️</button>
     </div>
 
-    <div id="score-container" style="position: absolute; top: 70px; left: 20px;">
+    <div id="score-container" style="position: absolute; top: 70px; left: 32px;">
       <span class="label">SCORE</span>
       <div id="score">0</div>
       <div id="comboDisplay">x1.5</div>
