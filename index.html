@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,35 +10,156 @@
   <title>Car Rush</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <div id="startScreen">
     <div class="header">
-      <div class="menu-dots">⋮</div>
-      <div class="settings">⚙</div>
+      <div class="coin-display-start">
+        <img src="coin.png" class="coin-icon-small"> <span id="startCoins">0</span>
+      </div>
+      <div class="menu-dots" onclick="toggleSettings()">⚙</div>
     </div>
     <h1>Car Rush</h1>
-    <div class="info-box">
-      <p>Tap left half to move left, right half to move right.<br>Use arrow keys on PC.</p>
+    <div class="subtitle-box">
+      <p>Funny racing game</p>
     </div>
-    <div class="info-box">
-      <p>High Score: <span id="highScore">0</span></p>
+    <div class="stats-row">
+      <div class="info-box mini">
+        <small>High Score</small>
+        <span id="highScore">0</span>
+      </div>
+      <div class="info-box mini">
+        <small>Level</small>
+        <span id="levelDisplay">1</span>
+      </div>
     </div>
-    <button onclick="startGame()">Start Game</button>
-    <small>Made by- RAJ</small>
+
+    <button onclick="startGame()" class="primary-btn">Start Race</button>
+    <button onclick="openGarage()" class="secondary-btn">Garage 🚗</button>
+    <!-- Combined footer -->
+    <div class="footer-credits">
+      <p>Made by - RAJ</p>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Settings</h2>
+
+      <div class="setting-group">
+        <label>Control Mode</label>
+        <div class="toggle-row">
+          <button id="btnTap" class="toggle-btn active" onclick="setControlMode('tap')">Tap</button>
+          <button id="btnSwipe" class="toggle-btn" onclick="setControlMode('swipe')">Swipe</button>
+          <button id="btnTilt" class="toggle-btn" onclick="setControlMode('tilt')">Tilt</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <label>Difficulty</label>
+        <select id="diffSelect" onchange="setDifficulty(this.value)">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+          <option value="legendary">Legendary</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label>Audio</label>
+        <div class="toggle-row">
+          <button id="btnSoundOn" class="toggle-btn active" onclick="setMute(false)">On</button>
+          <button id="btnSoundOff" class="toggle-btn" onclick="setMute(true)">Off</button>
+        </div>
+      </div>
+
+      <button onclick="closeSettings()" class="secondary-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Garage Modal -->
+  <div id="garageModal" class="modal" style="display:none;">
+    <div class="modal-content garage-content">
+      <div class="garage-header">
+        <h2>Garage</h2>
+        <div class="coin-display-modal">
+          <img src="coin.png" class="coin-icon-small"> <span id="garageCoins">0</span>
+        </div>
+      </div>
+      <div id="carGrid" class="car-grid">
+        <!-- Cars injected by JS -->
+      </div>
+      <button onclick="closeGarage()" class="secondary-btn">Back</button>
+    </div>
   </div>
 
   <div id="game" style="display: none;">
-    <div id="score">Score: 0</div>
+    <!-- HUD Top -->
+    <div id="hud-top">
+
+      <!-- Level / XP -->
+      <div class="hud-pill">
+        <span id="level-badge" style="margin-right:0;">LVL 1</span>
+        <div id="xp-container">
+          <div class="xp-bar-bg">
+            <div id="xp-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coins -->
+      <div class="hud-pill glow-gold">
+        <img src="Coin.png" class="coin-icon-small">
+        <span id="gameCoins">0</span>
+      </div>
+
+      <!-- Pause Button -->
+      <button id="pauseBtn" onclick="togglePause()">⏸️</button>
+    </div>
+
+    <div id="score-container" style="position: absolute; top: 70px; left: 20px;">
+      <span class="label">SCORE</span>
+      <div id="score">0</div>
+      <div id="comboDisplay">x1.5</div>
+    </div>
+
+    <!-- Game Elements -->
     <img src="car.png" id="car" />
+
+    <!-- Nitro HUD -->
+    <div id="nitro-container">
+      <div class="nitro-bar-bg">
+        <div id="nitro-bar-fill"></div>
+      </div>
+      <span class="nitro-label">NITRO</span>
+    </div>
+
+    <!-- Nitro Button -->
+    <button id="nitroBtn" ontouchstart="activateNitro(event)" onmousedown="activateNitro(event)">🚀</button>
+  </div>
+
+  <div id="pauseModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>GAME PAUSED</h2>
+      <button class="primary-btn" onclick="togglePause()">RESUME</button>
+      <button class="secondary-btn" onclick="exitToMenu()">QUIT</button>
+    </div>
   </div>
 
   <div id="gameOver" style="display: none;">
-    <h1>Game Over</h1>
-    <p id="finalScore"></p>
-    <button onclick="restartGame()">Restart</button>
+    <h1>CRASHED!</h1>
+    <div class="final-score-box">
+      <span id="finalScore">0</span>
+      <small>Score</small>
+    </div>
     <p id="quote"></p>
+    <div class="xp-gain-text" id="xpGain"></div>
+    <button onclick="restartGame()" class="primary-btn">Try Again</button>
+    <button onclick="exitToMenu()" class="secondary-btn">Menu</button>
   </div>
+
+  <div id="toast-container"></div>
 
   <script src="game.js"></script>
   <script>
@@ -48,4 +170,5 @@
     }
   </script>
 </body>
+
 </html>
